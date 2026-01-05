@@ -163,4 +163,16 @@ Read / Watch in this order
 	3.	Blei – Variational Inference lecture
 	4.	MIT Markov Chains notes
 	5.	Yang Song SDE lecture
+## Table 1: Depth Metrics Definition
+
+| Metric | Full Name | Formula | Range | Better | Interpretation |
+|--------|-----------|---------|-------|--------|----------------|
+| **AbsRel** | Absolute Relative Error | $\frac{1}{N}\sum\frac{\|d_{pred}-d_{gt}\|}{d_{gt}}$ | [0, ∞) | ↓ Lower | Average relative error per pixel |
+| **SqRel** | Squared Relative Error | $\frac{1}{N}\sum\frac{(d_{pred}-d_{gt})^2}{d_{gt}}$ | [0, ∞) | ↓ Lower | Penalizes large errors more |
+| **RMSE** | Root Mean Squared Error | $\sqrt{\frac{1}{N}\sum(d_{pred}-d_{gt})^2}$ | [0, ∞) | ↓ Lower | Overall depth accuracy in absolute units |
+| **RMSElog** | RMSE in log space | $\sqrt{\frac{1}{N}\sum(\log d_{pred}-\log d_{gt})^2}$ | [0, ∞) | ↓ Lower | Balances near/far error sensitivity |
+| **SILog** | Scale-Invariant Log Error | $\sqrt{Var(\log d_{pred}-\log d_{gt})}$ | [0, ∞) | ↓ Lower | Scale-invariant accuracy metric |
+| **δ < 1.25** | Threshold Accuracy 1 | $\%(\max(\frac{d_{pred}}{d_{gt}},\frac{d_{gt}}{d_{pred}}) < 1.25)$ | [0, 1] | ↑ Higher | % pixels within 25% error |
+| **δ < 1.25²** | Threshold Accuracy 2 | $\%(\max(\frac{d_{pred}}{d_{gt}},\frac{d_{gt}}{d_{pred}}) < 1.5625)$ | [0, 1] | ↑ Higher | % pixels within 56% error |
+| **δ < 1.25³** | Threshold Accuracy 3 | $\%(\max(\frac{d_{pred}}{d_{gt}},\frac{d_{gt}}{d_{pred}}) < 1.953)$ | [0, 1] | ↑ Higher | % pixels within 95% error |
 
