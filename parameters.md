@@ -24,19 +24,19 @@
 - Preserves geometric consistency while adding augmentation
 
 #### Point 4: Why Not Smaller?
-❌ **0.05-0.10**: Network memorizes specific texture positions
+**0.05-0.10**: Network memorizes specific texture positions
 - Less robust to real-world variations
 - Mean performance: 0.0324-0.0374 vs 0.0161 for 0.20
 
 #### Point 5: Why Not Larger?
-❌ **0.50**: Texture distortion too extreme
+**0.50**: Texture distortion too extreme
 - Breaks geometric assumptions
 - Harder for LSCM loss to converge
 - Mean performance: 0.0359-0.0430 vs 0.0161 for 0.20
 
 ---
 
-## Slide Points: Why offset_start_step = 200 is Best
+## Why offset_start_step = 200 is Best
 
 ### Quick Answer
 **200 steps balances early augmentation with initial convergence**
@@ -64,13 +64,13 @@
 - This matches typical deep learning: stable initialization → augmented fine-tuning
 
 #### Point 4: Why Not Immediately (Step 1)?
-❌ **Step 1**: Randomization from the start hurts convergence
+**Step 1**: Randomization from the start hurts convergence
 - Network needs stable signal to find initial solution
 - Like trying to learn while data keeps changing
 - Performance: 0.0324 vs 0.0161 for step 200
 
 #### Point 5: Why Not Later (Step 2000)?
-❌ **Step 2000**: Too late to prevent texture overfitting
+**Step 2000**: Too late to prevent texture overfitting
 - Network already memorized specific texture positions (0-2000 steps)
 - Augmentation has less time to help (2000-100000 vs 200-100000)
 - Loses 1800 steps of potential improvement
@@ -105,7 +105,7 @@
 
 ## Slide-Ready Bullet Points
 
-### Slide: "Optimal Hyperparameters"
+### "Optimal Hyperparameters"
 
 **offset_magnitude = 0.2**
 - ✓ Balances texture variation with stability
