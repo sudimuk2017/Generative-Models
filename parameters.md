@@ -5,7 +5,7 @@
 ### Quick Answer
 **0.2 provides optimal balance between texture variation and training stability**
 
-### Detailed Points (Choose what fits your slide):
+### Why
 
 #### Point 1: The Goldilocks Principle
 - **Too small (0.05-0.10)**: Limited texture variation → network doesn't learn robust features
