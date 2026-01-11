@@ -221,11 +221,89 @@ All visualizations are saved in `/analysis_results/`:
 
 ---
 
-## 10. Conclusion
+---
 
-**Best Overall Configuration:**
-- `offset_magnitude`: **0.05**
-- `offset_start_step`: **200**
-- `max_steps`: **50,000**
+## 10. Ground Truth Evaluation (CO3D Only)
 
-This configuration achieves the best balance across all metrics and object types, while saving 50% of training compute compared to full 100,000 step training.
+Since CO3D has ground truth depth data, we can evaluate actual depth accuracy.
+
+### Metrics Used (Ground Truth Comparison)
+
+| Metric | Description | Better |
+|--------|-------------|--------|
+| **AbsRel** | Absolute Relative Error | Lower |
+| **RMSE** | Root Mean Square Error | Lower |
+| **SILog** | Scale-Invariant Log Error | Lower |
+| **Delta1** | % pixels with error < 1.25 | Higher (max=1.0) |
+
+### Top 5 Parameter Combinations (Ground Truth)
+
+| Rank | offset_magnitude | offset_start_step | AbsRel | RMSE |
+|------|------------------|-------------------|--------|------|
+| **1** | **0.05** | **2000** | **0.00112** | 32.9 |
+| 2 | 0.10 | 1 | 0.00118 | 33.0 |
+| 3 | 0.05 | 1 | 0.00119 | 34.5 |
+| 4 | 0.50 | 200 | 0.00135 | 35.9 |
+| 5 | 0.10 | 2000 | 0.00145 | 36.6 |
+
+### Best Per Object (Ground Truth)
+
+| Object | Best Magnitude | Best Start Step | AbsRel |
+|--------|---------------|-----------------|--------|
+| Ball | 0.05 | 10 | 0.00101 |
+| Cake | 0.20 | 500 | 0.00107 |
+| Teddybear | 0.05 | 500 | 0.00290 |
+
+### Comparison: SDS Loss vs Ground Truth Rankings
+
+| Rank | SDS Loss Best | Ground Truth Best |
+|------|---------------|-------------------|
+| 1 | mag=0.05, step=10 | mag=0.05, step=2000 |
+| 2 | mag=0.05, step=500 | mag=0.10, step=1 |
+| 3 | mag=0.05, step=2000 | mag=0.05, step=1 |
+
+**Key Insight:** Both methods agree that **low magnitude (0.05)** is best, but disagree on optimal start_step.
+
+---
+
+## 11. Final Conclusions
+
+### Summary of All Analyses
+
+| Analysis Method | Best Magnitude | Best Start Step |
+|-----------------|---------------|-----------------|
+| SDS Loss (All Objects) | 0.05 | 200 |
+| Ground Truth (CO3D) | 0.05 | 2000 |
+| Per-Object Winners | 0.05 | varies |
+
+### Final Recommendations
+
+**For General Use (All Objects):**
+```yaml
+texture:
+  randomize_offset: true
+  offset_magnitude: 0.05
+  offset_start_step: 200
+```
+
+**For Best Depth Accuracy (CO3D-like objects):**
+```yaml
+texture:
+  randomize_offset: true
+  offset_magnitude: 0.05
+  offset_start_step: 2000
+```
+
+**Training Steps:**
+```yaml
+max_steps: 50000  # 50% compute savings, 95% quality
+```
+
+### Key Takeaways
+
+1. **offset_magnitude = 0.05 is consistently best** across all evaluation methods
+2. **offset_start_step** depends on priority:
+   - For SDS loss optimization: **200**
+   - For ground truth depth accuracy: **2000** or **1**
+3. **50,000 training steps** is sufficient for practical use
+4. Complex objects (Teddybear, Cube) may benefit from higher magnitude (0.5)
